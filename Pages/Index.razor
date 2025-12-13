@@ -1,0 +1,18 @@
+@page "/index"
+@using Microsoft.AspNetCore.Components
+@using EventApp.Data 
+@using EventEaseApp.Components
+@inject EventApp.Data.EventService EventService
+
+<h1>Upcoming Events</h1>
+<EventList Events="@events" />
+
+@code {
+    private List<EventModel> events = new();
+
+    protected override void OnInitialized()
+    {
+        events = EventService.GetEvents();
+    }
+}
+

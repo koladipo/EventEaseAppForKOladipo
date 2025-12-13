@@ -1,0 +1,47 @@
+@page "/event/{EventId:int}"
+@using EventApp.Data
+@inject NavigationManager NavManager
+@inject UserSessionService SessionService
+@inject EventService EventService
+@inject NavigationManager NavManager
+
+<h2>@Event?.Name</h2>
+@if (Event != null)
+{
+    <p><strong>Date:</strong> @Event.Date.ToString("f")</p>
+    <p><strong>Location:</strong> @Event.Location</p>
+    <p>@Event.Description</p>
+
+    <button class="btn btn-success" @onclick="NavigateToRegistration">Register</button>
+}
+else
+{
+    <p>Loading event details...</p>
+}
+
+@code {
+    [Parameter] public int EventId { get; set; }
+    private EventModel? Event;
+
+    protected override void OnInitialized()
+    {
+        Event = EventService.GetEventById(EventId);
+    }
+
+    private void NavigateToRegistration()
+    {
+        NavManager.NavigateTo($"/register/{EventId}");
+    }
+}
+@if (SessionService.IsLoggedIn)
+{
+    <p>Welcome, @SessionService.UserName!</p>
+    <button class="btn btn-danger" @onclick="Logout">Logout</button>
+}
+
+@code {
+    private void Logout()
+    {
+        SessionService.EndSession();
+    }
+}

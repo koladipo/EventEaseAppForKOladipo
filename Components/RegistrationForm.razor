@@ -1,0 +1,53 @@
+@page "/register/{EventId:int}"
+@using EventApp.Data
+@inject UserSessionService SessionService
+@using System.ComponentModel.DataAnnotations
+
+<h3>Register for Event</h3>
+
+<EditForm Model="@registrationModel" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="registrationModel.Name" />
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="registrationModel.Email" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@if (submitted)
+{
+    <p class="text-success">Thank you for registering, @SessionService.UserName!</p>
+}
+
+@code {
+    [Parameter] public int EventId { get; set; }
+
+    private RegistrationModel registrationModel = new();
+    private bool submitted = false;
+
+    private void HandleSubmit()
+    {
+        SessionService.StartSession(registrationModel.Name, registrationModel.Email);
+        SessionService.SetCurrentEvent(EventId);
+        submitted = true;
+    }
+
+    public class RegistrationModel
+    {
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        public string Email { get; set; } = string.Empty;
+    }
+}

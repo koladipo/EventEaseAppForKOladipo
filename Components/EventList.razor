@@ -1,0 +1,24 @@
+@using EventApp.Data
+@inject NavigationManager NavManager
+
+<div class="row">
+    @foreach (var evt in Events)
+    {
+        <div class="col-md-4 mb-3">
+            <EventCard EventName="@evt.Name"
+                       EventDate="@evt.Date"
+                       EventLocation="@evt.Location"
+                       ThumbnailUrl="@evt.ImageUrl"
+                       OnViewDetails="@(() => NavigateToDetails(evt.Id))" />
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<EventModel> Events { get; set; } = new();
+
+    private void NavigateToDetails(int id)
+    {
+        NavManager.NavigateTo($"/event/{id}");
+    }
+}

@@ -1,0 +1,19 @@
+@using EventApp.Data
+
+<div class="card">
+    <img src="@ThumbnailUrl" alt="@EventName" class="card-img-top"/>
+    <div class="card-body">
+        <h5 class="card-title">@EventName</h5>
+        <p class="card-text">@EventDate.ToString("MMMM dd, yyyy")</p>
+        <p class="card-text">@EventLocation</p>
+        <button class="btn btn-primary" @onclick="OnViewDetails">View Details</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string EventName { get; set; } = string.Empty;
+    [Parameter] public DateTime EventDate { get; set; }
+    [Parameter] public string EventLocation { get; set; } = string.Empty;
+    [Parameter] public string ThumbnailUrl { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnViewDetails { get; set; }
+}
